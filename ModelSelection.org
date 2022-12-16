@@ -1,0 +1,250 @@
+#+title: Model Selection
+#+author: Brandon Pahla
+#+options: ^:{}
+
+* Table Of Contents :toc:
+- [[#likelihood][Likelihood]]
+  - [[#definition][Definition]]
+  - [[#maximum-likelihood-estimates-mles][Maximum Likelihood Estimates (MLEs)]]
+  - [[#likelihood-for-a-linear-regression-model][Likelihood for a Linear Regression Model]]
+- [[#model-selection][Model Selection]]
+  - [[#methods-suitable-for-data-mining-and-hypothesis-generation][Methods Suitable For Data Mining and Hypothesis Generation.]]
+  - [[#the-problem-with-multiple-testing][The Problem With Multiple Testing.]]
+  - [[#model-selection-for-hypothesis-driven-research][Model Selection for Hypothesis-driven Research]]
+  - [[#finding-the-best-model-model-comparison-and-selection][Finding the best Model: Model Comparison and Selection]]
+
+* Likelihood
++ The method of *maximum likelihood* is an important alternative to the method of *least squares* for estimating parameters.
++ This method is mostly used in generalized linear models.
++ Akaike's Information Criterion ( *AIC* ) is a quantity derived from the likelihood
+  + It is an important tool used in model comparison and model selection.
+
+** Definition
++ This is the probability of the observed data, at each possible value of /p/.
+  + Where /p/ is the probability of success.
++ Likelihood is a function that tells us how "likely" each parameter value is, given the /observed/ data and our /assumed/ model.
+  + It is a function of unknown parameters.
++ We measure the likelihood of a certain parameter value by how likely the observed data are given this parameter value.
++ The data are known, hence, the likelihood is a function of the parameter value, which is unknown: \( L( p | data ) = P( data | p )\)
++ The likelihood of each parameter value is judged by how likely it makes the observed data.
+
+*** Independent Observations
++ The likelihood is calculated as the product of the probabilities of all observations, still a function of the parameters.
+  + i.e, what is the probability of observing these data, given the parameter value are *p*?
+  + \( L( p | data ) = \prod_{i=1}^{n}P( y_{i} | p )\)
+
+
+** Maximum Likelihood Estimates (MLEs)
++ The value of /p/ that maximises the probability of the observed data, i.e. at which the likelihood function achieves its maximum is the *maximum likelihood estimate*.
++ This value of /p/ is most often denoted with a hat symbol.
++ For *maximum likelihood* we write down the likelihood function and maximise this with respect to all parameters.
+
+*** Linear Regression Models
++ For these, the *maximum likelihood* estimates turn out to be identical to the *least squares estimates*
+
+*** More Complicated Models
++ For these, the *maximum likelihood* is an extremely powerful way to find parameter
+
+
+** Likelihood for a Linear Regression Model
++ Given: \(Y_{i} = \beta_{0} + \beta_{1}x_{i} + \beta_{2}z_{i} + \beta_{4}x_{i}z_{i} + \epsilon_{i} \)
++ The stochastic part of the model is: \(\epsilon_{i} \sim N(0, \sigma^{2}) \)
++ All this can be also be written as: \( Y_{i} \sim N(\mu_{i}, \sigma^{2} \)
++ With: \( \mu_{i} = \beta_{0} + \beta_{1}x_{i} + \beta_{2}z_{i} + \beta_{4}x_{i}z_{i} \), this describes how the expected value or mean of the response changes with the explanatory variables.
+
+*** Constructing the Likelihood
++ The parameters are \( \beta_{0}, \beta_{1}, \beta_{2}, \beta_{3} \) and \(\sigma^{2}\).
++ Given the model we can now find the probability of the data:
+  + \( L( \beta_{0}, \beta_{1}, \beta_{2}, \beta_{3}, \sigma^{2} = \prod_{i}^{n} P( y_{i} |  \beta_{0}, \beta_{1}, \beta_{2}, \beta_{3}, \sigma^{2} ))\)
++ \( P (y_{i} | ...) \) is calculated as the probability of \(y_{i}\) from a normal distribution with mean \( \beta_{0} + \beta_{1}x_{i} + \beta_{2}z_{i} + \beta_{3}x_{i}z_{i}\) and variance \(\sigma^{2}.\)
++ Remember \(P(y_{i} = 0 \), because this is a continuous random variable with a density function and probabilities need to be calculated by integrating over an interval.
++ This is then hte likelihood function in five parameters.
++ The likelihood function will be a complicated surface, of which we need to find the peak to obtain the maximum likelihood estimates.
+
+*** Log-Likelihood
++ This is the log of the likelihood function.
++ It is easier to calculate and easier to maximize.
+  + Mainly because it uses sums and not production of terms.
+
+*** Likelihood of a Fitted Model.
++ This is defined a sthe value of the likelihood function at the maximum likelihood estimate(s).
++ This quantity can be used to compare models.
+  + Models with higher likelihood are better.
++ *Likelihood is also an essential part of /Akaike's Information Criterion/, used in model selection*.
+
+
+* Model Selection
++ Remember: /"All models are wrong but some are useful"/ ~ George Box
++ Presenting results of a data-mining analysis as if they were obtained through a hypothesis-driven approach is a serious error and accounts for a lot of unreproducible research in the literature.
+
+** Methods Suitable For Data Mining and Hypothesis Generation.
+*** All Subset Regression
++ Fit all possible models with 1, 2, .., p explanatory variables.
++ The *all subset regression* procedure entails fitting all possible models: those with 1, 2, ..,p explanatory variables
+  + There are \( 2^{p-1} -1 \) possibilities.
++ From this selt of models we choose the one that fits best according to some criterion.
+  + e.g adjusted \( R^{2} \), AIC, Mean Square for error (MSE), or Mallows \( C_{p} \) statistic.
+
+**** Disadvantages
+ + One quickly ends up fitting a large number of models to a limited data set.
+ + This approach is guaranteed to lead to overfitting and the problem know as *Freedman's paradox*
+ + *Freedman's paradox* is where predictor variables with no explanatory power appear artificially important.
+
+**** Advantages
++ This approach can generate hypothesis about relationships that need to be tested on independent data sets.
+
+*** Stepwise Regression Procedure.
++ These are automated model selection procedures.
++ There is a procedure that combines forward and backward stepwise regression.
+
+**** Backward Stepwise Regression.
++ One starts with the full model (containing all the variables in the model)
++ Then eliminates variables in order of their significance (the one with the highest p-value first)
++ until only variables with small p-values remain in the model.
+
+**** Forward Stepwise Regression
++ One starts with the null model (containing no variables but only the intercept.)
++ Adds variables one at a time, always the one with the smallest P value first.
+
+**** Disadvantages
++ Overfitting.
++ You are almost guaranteed to find some spurious results.
+  + Variables with no predictive power appear statistically important.
++ Hence should not be used for testing scientific hypothesis
+
+**** Advantages
++ Quick and easy to use.
+  + e.g can use the 'dredge' R function in the 'MuMln' package.
++ Hence, mainly for data-mining analysis
+  + i.e, if you have no a priori hypothesis about the processes that could have generated your data.
+
+** The Problem With Multiple Testing.
++ If we test a lot of null hypotheses that are in fact true, a few of them will look unlikely (small p-value) just because the data happened to be unusual.
+
+*** Solution
++ Before starting a project that will involve statistical analysis the first step should alway be to *Think hard*.
+  + What do you want to know?
+  + What do you think is important?
++ Based on this, only consider the variables that you really think might be important and construct a small set of candidate
+
+** Model Selection for Hypothesis-driven Research
+
+*** Carefully Constructed Candidate Model Set
++ Put together a small set of candidate models to fit to your data set.
++ The set should consist of all models that you are interested in,
++ Based on your understanding of the system, but it should be small relative to the number of data points.
++ The idea is that each model represents an alternative hypothesis about the processes that generated the data and you should be able to justify the inclusion of each model.
++ You should ideally decide on the candidate model set before you start collecting data but definitely before you start looking at the data.
+
+** Finding the best Model: Model Comparison and Selection
++ *Parsimony or Occam’s razor* theory stats that with competing theories or explanations, the simpler one, for example a model with fewer parameters, is to be preferred.
++ However, if a more complex model explains the observed data much better, this more coplex model should be preferred.
++ To choose a *parsimonious model* we trade off goodness-of-fit and number of parameters used.
+  + A model that accomplishes a disired level of explanation or prediction with as few predictor variables as possible.
+
+*** Methods to Choose Between Models
++ Of these we prefer Akaike’s Information Criterion *(AIC)*, as this is the most flexible and is easily extended to other types of models, such as /generalized linear models/.
+
+**** 1. The Adjusted R^{2}.
++ This lets us compare models.
++ For non-linear models, R^{2} has a slightly different interpreation(!), which is why nls() doesn’t automatically calculate it and we need to do a bit more work.
+#+begin_src R
+(RSS <- sum(residuals(m3)^2)) # Residual sum of squares
+(TSS <- sum((Total.stem.length - mean(Total.stem.length))^2))
+1 - (RSS/TSS) # R-squared
+#+end_src
++ If a model has the highest value for \(R^{2}\) it does not necessarily mean that it is the best model for prediction.
++ It just means that this model explains the highest proportion of variance in the responce variable, among the models we considered.
++ However, \(R^{2} \) is a good tool to help us judge how well the model fits the data, i.e to judge goodness of fit.
+
+**** 2. The Residual Mean Square. (or Mean Squares for Error, MSE)
++ These estimates the residual variance *(unexplained variation)*, \( \sigma^{2}_{\epsilon}\).
++ This should decrease as more important variables enter into the regression equation.
++ *MSE* will tend to stabilise as the number of variables included in the equation becomes large.
++ The model that minimises the *MSE* fits the data most closely.
++ The *MSE* is directly related to the "adjusted \(R^{2}\)".
++ The R output from summary() function shows the *residual standard error*, which is the square root of *MSE*
+#+begin_src R
+MSE <- summary(mod1)$sigma^2
+#+end_src
+
+**** 3. Mallow's C_{p} Statistic
++ This is an estimate of the /prediction error/, which is a combination of bias and precision.
++ A good model should predict well.
++ For a well fitting model \(C_{p}\) should be close to /k/, the number of \beta parameters the model has estimated (including the intercept term).
++ For linear models, \(C_{p}\) is equivalent to Akaike's Information Criterion *(AIC)*.
+
+**** 4. Analysis Of Variance/ Deviance (ANOVA)
++ This only works with nested models
++ A model A, say, is /nested/ in model B if all terms in model A also appear in model B, but not all terms of model B need to be in model A.
+  + Model A is the simpler model, model B has some extra terms.
++ *Analysis of deviance* examines the /change in the amount of variance explained./
++ If this is large relative to the number of extra parameters estimated, then model B (the more complex model) is better,else, the simpler model is preferred.
++ We can compare the Regression Sum of Squares *(RSS)* (amount of variation explained) of the two models.
++ Whether the difference (or change) in RSS is significant can be tested with an F-test: does the extra term in the model help to explain sufficiently more of the variation in Y than the simpler model?
++ A small p-value indicates that the chance between *RSSs* (ressidual, not regression sum of errors) is unlikely under the null hypotheses (extra parameters are all 0)
++ Therefore, there is no evidence that the extra parameters improves the model (improves the amount of variation explained)
++ The residual SS will always decrease when more parameters are added to a model, this decrease may not be worth the 'cost' of the extra parameters.
++ The p-value and the F-statistic will always change because the MSE used is always that of the largest model.
+
+**** 5. Information Criterion
++ Finding the best balance trade-off between overfitting and underfitting.
+
+***** Overfitting
++ This happens when a model is too complex for the data set in question.
++ The model fits to noise in the data, rather than describing the underlying pattern.
++ This also leads to large standard errors because each parameter estimate is based of few data points.
++ A model that overfits is poor at predicting new data because of the large uncertainty in the parameter estimates.
+
+***** Underfitting
++ This happens when a model is too simple - think too rigid - to describe the structure in the data adequately.
++ This leads to bias.
++ Because we only have to estimate a few parameters, we get very precise estimates.
++ This is not a good thing in thois case because we would be too confident in our parameter estimates.
++ A model that underfits is also poor at predicting new data.
++ We may get precise predictions but they will often be precisely wrong.
+
+***** Trade-off between bias and variance related to model complexity
++ A simple model tends to underfit and make precise predictions wheareas a complex model tends to overfit and make variable predictions.
++ Akaike's Information Criterion *(AIC)* is a model selection tool that balances this trade-off and identifies the model that best describes the structure in our data.
++ AIC can also be used to compare nested and non-nested models.
++ It is calculated as : \( AIC = -2 log( \matcal{l}(\hat{\theta}|Data) ) + 2K \)
++ Where: \( log( \matcal{l} (\hat{\theta}|Data)\) is the maximized log-likelihood for a particular model, and /K/ us the number of estimated parameters.
++ \(-2 log ( \matcal{l}( \hat{\theta}|Data ))\) is the measure of distance from a best possible model.
+  + How closely the model fits the data.
++ /2K/ can be thought as a penalty for model complexity, because the more parameters we use in a model (i.e. the more complex the model is) the better the model will be able to explain the data, even if the parameters are not related to the response.
++ The model with the *smallest AIC value* in the set is therefore the best model.
++ The absolute value of the AIC is not informative, it depends on the data set.
++ Only the difference or change in AIC when comparing models is of interest.
++ We then calculate *\Delta AIC*, the difference in AIC between each model and the best.
++ Looking at the \Delta AIC makes it clear that the smallest \Delta AIC are the best/competitors in the set.
++ At this stage, it would be useful to know how likely each model is, given the data.
++ As it turns out, the likelihood of model \(g_{i}\) is proportional to a quantity that we can easily derive from the \Delta AIC values:
+
+****** \Delta AIC
+  + \( \matcal{l}(g_{i} | x ) \propto exp( - \frac{1}{2}\Delta_{i}) \)
+  + These likelihoods represent the relative strength of evidence for each model.
+
+****** Akaike Weights, w_{i}.
+  + To make the \Delta AICs more easily interpretable, we scale these values to sum to 1.
+  + \( w_{i} = \frac{exp(-\frac{1}{2}\Delta_{i})}{\sum_{r=1}^{R} exp(-\frac{1}{2}\Delta_{r})}\)
+  + In R:
+    #+begin_src R
+wi <- exp(-0.5*delta.aics)/sum(exp(-0.5*delta.aics))
+cbind(model=c(your_models_comma_seperated), wi)
+    #+end_src
+  + These are interpreted as strength of evidence for a particular model to be the best, relative to the other models in the set.
+
+****** Evidence Ratios
++ These are odds that one model is in fact the best, compared to another model.
++ \( \frac{w_{1}}{w_{2}}\)
++ Then we say model_1 is \( \frac{w_{1}}{w_{2}} \) times more likely to be the best model that model 2.
+
+***** Where AIC does not work
++ All models must be based on exactly the same data points.
++ If there are missing values for your explanatory variables, the AIC work work.
++ By changing the response variable, the likelihoods become incomparable, and then AIC-based model selection is invalid.
+  + That is, you can not compare model Y \sim A and log(Y) \sim A.
+
+***** Solutions to problems that make AIC not to work
++ If you have missing values in your data set, it is safer to remove all rows with missing data before you start the analysis.

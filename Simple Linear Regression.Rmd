@@ -1,0 +1,168 @@
+---
+title: "Simple Linear Regression"
+author: "Brandon"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+---
+header-includes:
+  - \usepackage{enumitem}
+  - \setlistdepth{20}
+  - \renewlist{itemize}{itemize}{20}
+  - \renewlist{enumerate}{enumerate}{20}
+  - \setlist[itemize]{label=$\cdot$}
+  - \setlist[itemize,1]{label=\textbullet}
+  - \setlist[itemize,2]{label=--}
+  - \setlist[itemize,3]{label=*}
+output:
+  rmarkdown::pdf_document:
+      keep_tex: yes
+---
+
+# Simple Linear Regression
+
+## Correlation
+
+-   Correlation is a measure of the strength of a linear relationship.
+-   Correlation ranges between -1 and 1
+-   r is the value of correlation
+    -   It is close to 1 if there is a strong positive relationship
+    -   It is close to -1 if there is a strong negative relationship
+
+------------------------------------------------------------------------
+
+## Simple Linear Regression
+
+-   With simple linear regression we a line to the observed data.
+
+    -   This line describes the relationship between the response and the explanatory variables in an equation of the form: `y = a + bx`.
+
+-   This fitted line is an estimate of the true relationship, and hence there is uncertainty attached to it.
+
+-   *Regression lines are used to describe and understand relationships between variables, estimate parameters, are used to estimate the response for X values not directly observed, and to understand the variability.*
+
+-   *Regression models* describe the functional form and error structure we want to fit to the data.
+
+-   The simple linear regression model is: $$
+    Y_{i} = \beta_{0} + \beta_{1}X_{i} + e_{i}
+    $$
+
+    `with i = 1, ...., n and` $$ e_{i} \tilde\ N(0, \sigma^2)$$
+
+    -   n is the sample size
+        -   that is the number of cases, observations
+    -   $$ 
+        Y_{i} \space \space  \text{is the response for unit i}
+        $$
+    -   $$
+        \beta_0 \space \text{and} \space \text{are regression coefficients or parameters}
+        $$
+        -   These define a line and are unknown untile we have fitted the model to data.
+    -   $$
+        X_i \space \text{is the value of the explanatory variable of unit i}
+        $$
+    -   $$
+        e_i \space \text{is the error term, whose exact value is not known, it captures deviations from the line}
+        $$
+
+### [FINDING BEST-FITTING LINE]{.underline}
+
+-   The most common way to find the best-fitting line is the method of least squares (ordinary least square, OLS)
+
+    -   Fitting the line involves identifying $\beta_0$ and $\beta_1$ which in some sense give the best-fitting line.
+
+    -   This method finds the line which minimises the error or residual sum of squares (RSS)
+
+        -   The residual sum of squares is often referred to as error sum of squares and denoted **SSE**.
+
+        -   $\text{RSS} \space = \sum_i(Y_i - \beta_0 - \beta_1X_i)^2$
+
+            -   $=\space \sum_i(Y_i - \hat Y_i)^2$
+
+            -   $=\space\sum_ir_i^2$
+
+        -   Least squares minimises unexplained variation, i.e. maximises explained variation.
+
+    -   Mathematically:
+
+        -   To minimise SSE, we differentiate the regression equation with respect to $\beta_0$ and $\beta_1$, the set to 0.
+        -   Solving the two simultaneous equations yields $\hat\beta_0$ and $\hat\beta_1$, the parameter estimates.
+            -   These are the intercept and the slope of the fitted least-squares regression line.
+
+    -   Once we have estimated the parameters, we can write down the estimated or fitted regression line with actual values for $\beta_0\space\text{and}\space\beta_1$.
+
+-   **Residual** i is defined as $r_i\space=y_i-\hat y_i$
+
+    -   This measures the vertical distance between the observation and the fitted regression line.
+
+    -   Some residuals are negetive, some positive and some close to zero.
+
+-   **Fitted value** i as defined as:
+
+    -   $\hat y_i=\hat\beta_0+\hat\beta_1X_i$
+
+-   **Interpreting the results**
+
+    -   Steps in Data Analysis
+
+        1.  Understand and interpret coefficients
+            -   Given $\hat y$, the hat on the $y$ denotes an estimate for $y$.
+
+            -   The intercept $\beta_0$ gives the average of the response values when the predictor value is 0.
+
+            -   The coefficient estimates come with **standard errors**.
+
+                -   **Standard error** is a measure of the precision or uncertainty of the estimate.
+
+                -   Small Standard errors tell us that the estimate is close to the true value.
+
+                -   Large standard error indicate that the current estimate may be quite different from the true value we are trying to estimate.
+
+                -   Standard error decreases with the increase in the sample size.
+
+                -   Standard errors are needed to construct confidence intervals and for hypothesis tests.
+
+            -   Estimates are random variables because they are calculated from data.
+        2.  check model validity and understand residual
+            -   *Hypothesis Testing*
+
+                -   The student t distribution is used.
+
+                -   $H_0 \space : \space \beta_i = 0$
+
+                -   $t \space = \space \frac{estimate - 0}{SE(estimate)}$
+
+                -   This measures how far i.e. how many standard deviations the observed value if from 0 ($H_0 \space : \space \beta_i \space = 0$ ).
+
+                -   If $H_0$ were true, it would be rare to have a $t$ value more extreme than $\pm2$.
+
+                -   The **p-value** ($Pr(>|t|)$) is a measure of this distance (observed value compared to the null hypothesis.)
+
+                    -   A small p-value indicate strong evidence against the null hypothesis.
+
+                    -   A large p-value indicate that there is not much evidence of a relationship between the response and the explanatory variable.
+
+                    -   The p-value measures how likely the observed data (and more extreme) are under $H_0$.
+
+                -   The *hypothesis test / p-value* is a check to see if there is evidence in the data for a relationship.
+
+                    -   Relationships not supported by the data should not be interpreted.
+
+            -   Hypothesis testing in general.
+
+                -   In hypothesis testing we compare our observations to a theory.
+
+                -   We use p-value to measure how likely the observed data are under the assumption of $H_0$.
+
+                -   i.e. The p-value measures the probability of the observed data or statistic (or more extreme) when assuming the null hypothesis is true
+
+                    -   $p \space = \space Pr(\text{observed statistic(or more extreme)}|H_0)$
+
+                -   If the observed data (or the test statistic) are very unlikely (p-value is small).
+
+                -   ... pg121223
+        3.  Check how good the model is
+        4.  Do predictions and confidence intervals.
+        5.  Summary results.
+        6.  

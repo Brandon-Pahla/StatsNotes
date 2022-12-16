@@ -1,0 +1,362 @@
+#+title: Experimental Design
+#+author: Brandon Pahla
+#+options: ^:{}
+
+* Table Of Contents :toc:
+- [[#observational-and-experimental-studies][Observational and Experimental Studies]]
+- [[#experimental-studies-design][Experimental Studies Design]]
+  - [[#need-for-experimental-design][Need for Experimental Design]]
+- [[#terminology][Terminology]]
+  - [[#experimental-unit][Experimental Unit]]
+  - [[#treatment-factors-levels-and-treatments][Treatment Factors, Levels and Treatments]]
+  - [[#homogeneous-experimental-units][Homogeneous Experimental Units]]
+  - [[#blocking][Blocking]]
+  - [[#experimental-design][Experimental Design]]
+  - [[#replication][Replication]]
+  - [[#pseudoreplication][Pseudoreplication]]
+  - [[#confounding][Confounding]]
+- [[#fundamental-principles-of-experimental-design][Fundamental Principles of Experimental Design.]]
+  - [[#replication-1][Replication]]
+  - [[#randomisation][Randomisation]]
+  - [[#experimental-error-variance][Experimental Error Variance.]]
+- [[#designing-an-experiment][Designing an Experiment]]
+  -  [[#treatment-structure][Treatment Structure]]
+  - [[#controls-blinds-and-placebo][Controls, Blinds and Placebo]]
+  - [[#blocking-structure][Blocking Structure]]
+  - [[#methods-of-randomization][Methods Of Randomization]]
+- [[#design-for-observational-studies--sampling-designs][Design For Observational Studies / Sampling Designs]]
+- [[#summary-how-to-design-an-experiment][Summary: How to design an Experiment?]]
+  - [[#treatment-structure-1][Treatment Structure]]
+  - [[#experimental-units][Experimental Units]]
+  - [[#blocking-1][Blocking]]
+  - [[#other-considerations][Other Considerations]]
+  - [[#design][Design]]
+  - [[#randomization][Randomization]]
+- [[#completely-randomized-designs-single-factor][Completely Randomized Designs (Single Factor)]]
+  - [[#exploratory-data-analysis-and-checking-assumptions][Exploratory Data Analysis and Checking Assumptions]]
+  - [[#errors-are-normally-distributed][Errors Are Normally Distributed]]
+  - [[#errors-are-independent][Errors Are Independent]]
+  - [[#analysing-completely-randomized-designs-with-two-levels-t-test][Analysing Completely Randomized Designs with Two Levels: t-test]]
+
+* Observational and Experimental Studies
++ The fundametal ways to obtain information in research are as follows:
+  1. Observation
+     + The observer /watches/ and /records/ information about the subject of interest.
+  2. Experimentation
+     + The experimenter /actively manipulates/ the variables believed to affect the response.
++ Both observational and experimental studies give us information about the world around us, but it is only by experimentation that we can infer *` /causality/.*
++ In a /carefully planned/ *experiment* if a change in variable A, say, results in a change in the response Y, then we can be sure that A caused this change
+  + Because all other factors were controlled and held constant.
++ In an *observational study* if we note that as variable A changes Y changes, we can say that A is associated with a change in Y.
+  + But we can not be certain that A itsself was the cause of the change.
+  + The change could have been caused by another observed or unobserved variable that happens to be correlated with A.
+
+* Experimental Studies Design
++ These experiments aim to compare the effects of a number of /treatments/.
++ These treatments are carefully choosen and controlled by the experimenter.
+
+** Need for Experimental Design
+1. We can (almost) only control all factors to such an extent as to eliminate any other possible explanations for a change in response other than the treatment factor of concern using experiments. This allows us to infer causality.
+2. Well designed experiments are easy to analyse.
+   + Estimates of treatment effects are independent, i.e no issues of multicollinearity, with different variables vying for the right to explain variation in the response.
+   + This independence in the explanatory variables (treatments) is achieved through the experimental design.
+3. Experiments are frequently used to find optimal levels of setting (treatment factors) which will miximise (or minimise) the response.
+   + Such experiments can save enormous amounts of time and money.
+4. In an experiment we can choose exactly those settings or treatment levels we are interested in.
+
+* Terminology
+** Experimental Unit
++ This is the entity (material) to which a treatment is assigned, or that receives the treatment.
++ The experimental unit may differ from the *observational* unit, which is the entity from which a measurement is taken.
++ It is the experimental units which determine how often the treatment has been replicated and therefore the precision with which we can measure the treatment effect.
++ The requirement for STA2007S/H is that in the end there is only one /observation/ (response value) per experimental unit.
++ If there are several /observations/, they are combined and the mean is taken.
++ Very often, the experimental unit is also the observational unit.
++ The experimental unit determines how often the treatment has been replicated.
+
+** Treatment Factors, Levels and Treatments
++ This is the factor which the experimenter will actively manipulate, in order to measure its effect on the response.
++ It will become the explanatory variable (mostly categorical) in the model.
++ For each treatment factor, we actively choose a set of levels.
++ Each experimental unit only receives one of the treatments.
++ In *factorial experiments* we manipulate several (at least two) treatment factors
+  + The treatments are all possible combinations of the factor levels.
+
+** Homogeneous Experimental Units
++ These are experimental units that have no distinguishable differences  prior to the experiment.
++ The more homogeneous the experimental units are, the smaller the experimental error variance (natural variation between observations which have received the same treatment) will be.
++ It is desirable to have (fairly) homogeneous experimental units for experiments, because this allows us to detect differences between treatments more easily.
+
+** Blocking
++ This is done if the experimental units are heterogeneous.
++ This is a process by which, we group sets of homogeneous experimental units so that we account for differences between these groups.
++ Within *one block*, the experimental units are similar and we can compare the treatments more easily.
++ Blocking allows us to tell which part of the total variation is due to differences between treatments and which part is due to differences between blocks.
+
+** Experimental Design
++ This is a plan for assigning treatments to experimental units.
++ This is a detailed plan for grouping (blocking) experimental units and for how treatments are assigned to the experimental units.
+
+** Replication
++ This is when a treatment is applied independently to more than one experimental unit.
++ Treatments should be replicated.
+
+** Pseudoreplication
++ This is whereby one makes more than one observation on the *same* experimental unit.
++ THis is a common fallacy.
++ The problem is that without true replication, we dont have an estimate of uncertainty, of how repeatable, or how variable the results is if the same treatement were to be applied repeatedly.
+
+** Confounding
++ This means that it is not possible to seperate the effects of two (or more) factors on the response.
++ It is not possible to say which of the two factors is responsible for any changes in the response.
+
+* Fundamental Principles of Experimental Design.
+
+** Replication
++ Each treatment must be applied to sevaral experimental units.
++ This ensures that the variation between two or more units receiving the /same/ treatment can be estimated and valid comparisons can be made between the treatements.
++ This allows us to seperate variation due to differences between treatments from variation within treatments.
++ *Variation within treatments* is the variation between experimental units with the same treatments, it measures variability among the experimental units.
++ Proper replication demands that the experiment is set up independently for each experimental unit.
++ If the treatments are not applied independently to the experimental units, treatment effects become *confounded* with other factors.
+
+** Randomisation
++ This is allocating treatments to experimental units in such a way that all experimental units have exactly the same chance of receiving a specific treatment.
+
+*** Randomisation ensures the following
+a) There is no bias on the part of the experimenter, either conscious or unconscious, when assigning treatments to experimental units.
+b) No experimental unit is favoured to receive a particular treatment.
+c) Possible differences between experimental units are equally distributed amongst the treatments.
+   + This ensures that differences between treatment means can be attributed to differences between treatment, and not to any prior differences between the treatment groups, i.e. that treatment effects are not confounded with differences between the groups.
+d) Randomisation allows us to assume independence between observations.
+
+*** Summary
+**** Random != haphazard
++ Randomisation in statistics means that each experiment unit has the /same chance/ of beign allocated any of the treatments.
++ Use software packages instead of ad-hoc procedures as they do not guarantee randomness in a statistical sense.
+
+**** Randomising time or order
++ Both the allocation of treatments to the experimental material and the *order* in which the individual runs or trials of the experiment are to be performed must be randomly determined!
++ This prevents the systematic changes over time that influence results.
++ If time effect is suspected, it might be best to block for time.
++ Randomisation over time helps to ensure that time effect is approximately the same, on average, in each treatment group, i.e. treatment effects are not confounded with time.
+
+**** Randomising Treatments in Space
++ For the same reason as for randomising time or order, one would block spatially arranged experimental units.
++ If this is not possible, ranomise treatments in space.
+
+**** Conclusions drawn from Experiments
++ Randomisation is necessary for conclusions drawn from the experiment to be correct, unambiguous and defensible.
+
+** Experimental Error Variance.
++ To a large extent, *experimental error variance* comes from inherent differences between the experimental units.
++ The larger this unexplained variation, the more difficult it becomes to detect a treatment signal, or differences between treatments.
+
+*** How to Reduce Experimental Error Variance
++ This can be reduced by controlling extraneous factors (keeping all else constant) and by choosing similar experimental units.
++ Alternatively, *blocking* is very effective.
+
+**** Blocking
++ We can compare the effects of treatments on similar experimental units (within blocks)
++ We can estimate variation due to differences between blocks and remove this from the unexplained variation.
++ If there are clear differences between the experimental units, it is a good idea to absorb this into a blocking factor.
++ This is also useful if uncontrollable factors, or nuisance factors, could affect the response.
++ It also offeres the opportunity to test treatments over a wider range of conditions.
++ If blocking is not feasible, randomisation will ensure that at least treatments and nuisance factors are not confounded.
+
+* Designing an Experiment
+**  Treatment Structure
+*** Treatment Factors
++ These are the factors/ variables that are investigated, controlled, manipulated, thought to influence the response.
++ Each treatment factor will have some /levels./
+  + These are particularly values or settings chosen by the experimenter, e.g the factor water level can have levels low, medium and high.
+
+*** The Treatment Structure Can Be the Following:
+**** 1. Single Factor:
++ The treatments are the levels of a single treatement factor.
++ One needs to decide on the which levels of the factor to choose.
++ If the treatement factor is continuous, e.g temperature, it may be wise to choose equally spaces levels.
+  + This will simplify analysis when we want to investigate the form of the relationship between temperature and the response (linear or quadratic, etc.)
+
+**** 2. Factorial
++ An experiment with more than one treatement factor in which the treatments are constructed by /crossing/ the treatment factors:
+  + The treatments are all possible combinations of the /a/ levels of factor A and the /b/ levels of factor B, resulting in /a/ x /b/ treatments.
++ Each /treatment/ will consist of a combination of factor levels.
+
+**** 3. Nested
++ If factors are nested, the levels of one factor, B, will not be identical across all levels of another factor, A.
++ Each level of factor A will contain different levels of factor B.
++ We say B is *nested* in A.
+
+** Controls, Blinds and Placebo
++ /One should *always* check whether a *control treatment* is needed./
++ A *control treatment* is a benchmark treatement to evaluate the effectiveness of experimental treatements.
++ If humans are involved as experimental units or as observers, some psychological effects can creep into the results.
+  + In order to pre-empt any such possibility it is often necessary to blind either or both observer and experimental unit: *single- or double-blinded studies*.
+  + This prevents biased recording of results, because expectactions could consciously or unconsciously influence results.
+  + In medical studies, a *placebo* is used often used as a control treatment.
+
+** Blocking Structure
++ The aim of blocking is to /reduce experimental error variance/.
++ Experimental units in one block are homogeneous, there will be differences between the blocks.
++ This strategy reduces the original error variance by moving some of this into differences between blocks, i.e. allows us to attribute some of the differences between the experimental units to the blocking variable.
++ This reduces the uncertainty in our estimates.
++ For the simplest designs, the number of experimental units in each block corresponds to the total number of treatements.
++ If this is not possible, one can consider incomplete block designs.
+
+*** Designs
++ The following designs can have a treatment structure of a single factor, factorial, or nested.
+
+*** Completely Randomized Design
++ This design is used when the experimental units are all homogeneous.
++ The treatments are randomly assigned to the experimental units.
+
+*** Randomized Block Design
++ This design is used when the experiment units are not all homogeneous but can be groupded into sets of homogeneous units called *blocks* /(one blocking factor)./
++ The treatments are randomly assigned to the units within each block.
+
+** Methods Of Randomization
++ Randomization refers to the random allocation of treatments to the experimental units.
++ This can be done using /random number tables/, a /computer/ or calculator ot generate random numbers, dice, or drawing numbers from a hat (provided they were shuffled first and have equal chances to be choosen).
++ When not all experimental runs can be performed at the same time, both the assignment of treatments to experimental units and the sequence in which the runs are performed have to be randomised!
++ When assigning treatments to experimental units, each permutations must be equally likely.
++ For completely randomized designs the experimental units are not blocked, so the treatments (and their replications) are assigned completely at random to all experimental units available (hence /completely randomized/)
++ If there are blocks, the randomization of treatments to experimental units occurs in each block.
+
+* Design For Observational Studies / Sampling Designs
++ Observational studies are studies that are based on observation rather than manipulation.
++ The principles of observational design are also used in observational studies.
++ *Randomization* is replaced with /random sampling/.
++ *Blocking* is replaced with /strata/.
++ The analysis is the same, the conclusions will differ in that no *causality* can be inferred.
++ Here, /design/ refers to how the sampling is done (on the explanatory variables) and is refered to as *sampling design*
++ The aim is to achieve the best possible estimates of effects.
+
+* Summary: How to design an Experiment?
+** Treatment Structure
++ What is the research question?
++ What is the response?
++ What are the treatment factors?
++ What levels for each treatment factor should I choose?
++ Do I need a control treatment?
++ Do I want to look at interactions?
+
+** Experimental Units
++ What is the experimental units?
++ How many experimental units do I have available?
++ How many replicates do I need?
++ How many experimental units can I get, afford?
+
+** Blocking
++ Do I need to block the experimental units?
++ Do i need to control other unwanted sources of variation?
++ Block for time, space?
+
+** Other Considerations
++ ethics
++ time
++ cost
+
+** Design
++ Depending on whether I have blocks or not, I choose a completely randomised design or a randomised block design.
++ Many other designs are possible.
+
+** Randomization
++ Depending on the chosen design, do I have to randomize order?
++ Completely Randomization or randomization in blocks (restricted randomization)?
+
+* Completely Randomized Designs (Single Factor)
++ This is the simplest of all designs.
++ It is used when experimental units are fairly /homogeneous/, i.e. we expect them to react similarly to a given treatment.
+  + Also, we do not expect any other effects that could introduce systematic changes in the response over space or time.
+  + Therefore, no blocks are needed.
++ Each treatment is assigned to /r/ experimental units ( /r replicates/)
++ Each unit is eqaully likely to receive any of the /a/ treatments.
++ There are /N = r x a/ experimental units.
++ A *balanced* experiment is one with the same number of replicates for each treatment.
+
+** Exploratory Data Analysis and Checking Assumptions
++ When analysing data from experiments, the questions of interest are mostly about comparing groups,
+  + e.g. which treatment worked better, or,
+  + how much does the mean response differ between treatment A and treatment B?
++ We often use the *t-test* for comparing two groups and *analysis of variance* (ANOVA) for comparing multiple groups.
++ In a *single-factor* completely randomized design, just one factor is varied.
++ Having several observations per experimental unit and treatiing them as independent leads to the problem called *pseudoreplication*.
++ For *single-factor completely randomized designs* we can use a *one-way analysis of variance* (one-way ANOVA).
+  + One-way because there is a single factor: the treatment factor.
+  + This is just an extension of a two-sample t-test.
++ For these statistical approaches the data should meet certain distributional assumptions:
+  1. There are no outliers.
+  2. All groups have equal population variance.
+  3. The errors are normally distributed.
+  4. The errors are independent.
+
+*** Outliers
++ These can distort the estimates of variation and can have a large influence on our estimates and standard errors.
++ The best way to check for outliers is to plot the data.
++ e.g. plotting treatments side-by-side using box plots.
+
+*** Equal Population Variance
++ Since we usually only have a sample, rather than information on the entire population, we would not expect that the variance in each treatment is exactly the same, however, the variances are expected to differ a bit due to chance.
++ We need to check that they are similar enough so that our assumption of equal population variance is reasonable.
++ If we find worrisome heterogeneity in the variances, we need to investigate the source of this heterogeneity.
++ At times log-transforming the response helps to make the variances more similar.
+
+**** Box plots
++ Side-by-side box plots of the data, grouped by treatment, as for outliers, are a good tool to visually check how much variability in the observations vary among treatments.
++ Here we are checking to see if the interquartile ranges are comparable accross treatments.
+**** tapply
++ We can also calculate the standard deviations of the observations per treatment and see how much they vary.
++ We use the tapply() function and sort the values in increasing order.
+  ```
+  sort(tapply(y, x, sd))
+  ```
++ As long as the ratio of the largest to the smallest observed standard deviation is less than about five.
+
+**** ANOVA
++ For balanced designs, the analysis of variance is relatively robust to violation of this assuption.
++ It can be more problematic with unbalanced designs.
+
+**** Welch's two-sample t-test
++ If we have a factor with only two levels, we can use the version of the t-test that does not assume equal variances.
+
+** Errors Are Normally Distributed
++ We can check this assumption by looking at the residuals.
++ The response doesnt need to be normally distributed.
++ It is only the unexplained variability, i.e. the errors or residuals, that we assume to be normally distributed.
++ If the response has a clearly non-normal distribution (e.g binomial), then the residuals are unlikely to be normally distributed.
+
+*** ANOVA
++ For balanced designs, ANOVA is fairly robust to deviations of the residuals from a normal distribution.
+
+*** Box Plots
++ These again give us a good idea of how well our data meet this assumption.
++ Signs for Potential Problems are symetrical box plots, indicating a skew distribution.
++ We also want to check that the data points tend to cluster around the medians.
+  + This is an assumption we want to revisit after fitting the ANOVA model by inspecting the distribution of the residuals.
+
+** Errors Are Independent
++ This assumption is often violated if some factor has been overlooked and omitted from the model.
+*** Examples:
+1. Omitting blocking factors from the model.
+2. Drift in the readings returned by an instrument.
+3. A rise in temperatures in the lab during the day can introduce systematic differences between measurements taken in the morning compared to those taken in the afternoon.
+4. Spatial gradients.
+5. groups of observations: e.g. groups of animals are housed together in the same pen, or groups of plants get their water from the same tap. Any effects (food that went bad, water that was contaminated) will affect all experimental units that were exposed to the same environment.
+
+*** Disadvantages
++ These problems lead to autocorrelated residuals - observations made closer together in time or space are more similar to each other than expected , i.e. there is some structure in the data not accounted for by the model.
++ This can lead to biased estimates of treatment effects over- or underestimation of standard errors.
+
+*** Assessing The Validity of The Independece Assumption
++ We need to think carefully about the experimental protocol and what could have caused problems.
++ A useful too is the *Clevelan dot plot*.
+```
+dotchart(y, ylab=..., xlab=...)
+```
++ We plot the data (or residuals after fitting the model) in the order in which they were collected to see whether there are any obvious patterns.
++ We could also plot the data according to the spatial arrangement in which they were collected to see whether there are any spatial patterns.
++ If there were systematic trends in the measurements over time or space, this plot would show clear patterns.
+
+** Analysing Completely Randomized Designs with Two Levels: t-test
++

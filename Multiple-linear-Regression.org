@@ -1,0 +1,283 @@
+#+title: Multiple Linear Regression
+#+author: Brandon Pahla
+#+OPTIONS: ^:{}
+#+PROPERTY: header-args :tangle ../Rscripts/multiple-linear-regression.R
+#+auto_tangle: t
+
++ Setting up the working directory for the datasets to be used for this lecture.
+  #+begin_src R :session
+  setwd("/home/brandon/Vula/STA2007S/Data")
+  #+end_src
+
+* MULTIPLE LINEAR REGRESSION
++ This is an extension of the simple linear regression models with more explonatory variables.
+
+
+** Multiple vs simple linear regression
++ In simple linear regression we want to explain how a response variable relates to one explanatory variable.
++ Multiple linear regression refers to having multiple explanatory variables in one regression model.
+  + The more of these explanatory variables we can build into our model, the better the model will be able to describe and predict the response variable.
+  + However, there are dangers involved in adding variables to a model without thought.
++ In simple linear regression, our model consisted of \beta_{0}(the intercept term), \beta_{1} (one slope coefficient) and \epsilon_{i} to capture the unexplained variability.
+  + Residuals are defined as the vertical distance between each data point and the line of best fit.
++ In simple linear regression, thhe relationship between the response Y and an explanatory variable X can be described with a straight line.
++ In multiple linear regression, the relationship between Y and the explanatory variables is described by a surface, or a plane, since we have added one dimension.
+  + Here we can think of residuals as the vertical distances between each data point and the plane.
+  + Y_{i} = \beta_{0} + \beta_{1}X_{1i} + \beta_{2}X_{2i} + \epsilon_{i}
+    + \epsilon_{i} \tilde N(0,\sigma^{2})
+    + X_{1} and X_{2} are explanatory variables.
+    + This mode describes the effect (change in mean response) of each explanatory variable.
+      + \beta_{1} is the change in mean response, given the value of all the other explanatory variables, i.e. when holding other explanatory variables constant or fixed.
+
+
+** Estimating the \beta coefficients
++ Externding on the least squares method.
+  + SSE =  \(\sum^{n}_{i=1} (Y_{i} - (\beta_{0} + \beta_{1}X_{1i} + \beta_{2}X_{2i}))^{2}\)
+    +   =  \(\sum^{n}_{i=1} (Y_{i} - \hat{Y})^{2}\)
+    +   =  \(\sum_{i=1}^{n} (\epsilon^{2}_{i})\)
+    + Here we are finding the combination of \(\beta_{0} ,\beta_{1} and \beta_{2} \) values which minimizes the error sum of squares.
++ In matrix notation the model is given as follows. \[Y = X\beta + e \]
+  + Where \(Y\) is the response vector of length \(n\); \(X\) is an \(n*k\) design matrix with an initial column of \(1\)'s for the intercept term, and a column for each explanatory variable; \(\beta\) is a \(k\)-dimensional vector of parameters to be estimated; and \(e\) is an \(n\)-dimensional vector of parameters to be estimated; and \(e\) is an \(n\)-dimensional vector of errors.
+  + By minimizing the error sum of squares \((Y - X\beta)'(Y-X\beta)\) over all possible \(\beta\) we obtain \(\hat{\beta} = (X'X)^{-1}X'Y\) where \(\hat{\beta}\) is the vector of estimated coefficients, and the ordinary least squares (OLS) estimator of \(\beta\).
+
+
+** Residual standard error
++ *Residual standard error* gives one an idea of how much the observations deviate from the fitted line or plane, i.e how large the unexplained variability is.
+  + This can be roughly understood as the average distance from the fitted line or plane.
+  + *Standard errors are the same units as the response*
++ The error variance (unexplained variability) is estimated by the variance of the residuals.
++ This *residual variance* is the variability of the data points around the fitted surface (*hyperplane*)
++ Variance estimates always come with degrees of freedom (df).
++ These df can be thought as the number of independent deviations the variance was calculated with.
++ In multiple regression we estimate k = p + 1 parameters (1 intercept plus p slope parameters), so that the residual variance has n-p-1 = n - k df.
++ *The residual standard error*  is estimated by the standard deviation of the residuals (square root of the residual variance.) \(\hat{\sigma} = \sqrt{\frac{\sum r^{2}_{i}}{n - p - 1}} \) .
+
+
+** Why use multiple linear regression as opposed to many simple linear regression models?
++ Simple linear regression tells use about how the response is related to a single explanatory variable.
++ Whereas, multiple linear regression models allow us to seperate effects of the all the explanatory variables on the response variable.
+  + As along as all the explanatory variables are not too strongly correlated.
++ *NOTE*: Neither simple nor multiple regression will tell you anything about which variables cause changes to the response.
+
+
+** R-functions
+
+*** Pairs function
++ This is a good way to have a quick look at the relationships between many continuous variables, all at once.
++ We can also use this plot to check wheather it is reasonable to assume linear relationship between the response and the explanatory variables.
++ Can also be used to identify whether any of the candidate explanatory variables are strongly correlated.
++ Usage /pairs( *~response_variable* + *explanatory1* + .. + *explanatoryk*, *data = df* )/
+
+
+*** vif function (variance inflation factor)
++ this is from the car library
++ Used to check for collinearity.
++ Values returned provide an index of how much the variance (uncertainty) of the estimated regression coefficient of each explanatory variable is increasing as a result of collinearity.
++ Rule of thumb, variance inflation factors of more than 4 or 5 tend to be considered large.
+
+
+*** visreg(lm)
++ Used to check for linearity.
+
+
+*** qq-plot
++ The /qq-plot/ plot plots standardized residuals against theoretical quantiles of the standard normal distribution (N(0,1)).
+
+*** cofint(lm)
++ Confidence interval of the coefficients.
+
+** Assumptions of Multiple Linear Regression
+1. *A linear relationship between the dependent and independent variables exit.*
+   + The best way to check the linear relationship is to create scatterplots and then visually inspect the scatterplots for linearity.
+   + If the relationship displayed in the scatterplots is not linear, then the analyst will need to run a non-linear regression or transform the data using stastical software, such as SPSS.
+2. *The independent variables are not highly correlated with each other.*
+   + The data showed not show multicollinearity, which occurs when the independent variables (explanatory variables) are highly correlated.
+   + When independent variables show multicollinearity, there will be problems figuring out the specific variables that contributes to the variance in the dependent variable.
+   + The best method to test for this assumption is the Variance Inflation Factor method.
+3. *The variance of the residuals is constant.*
+   + Multiple Linear Regression assumes that the amount of error in the residuals is similar to each point of the linear model.
+   + This scenerrio is known as *homoscedasticity.*
+   + To test this assumption, the data can be plotted on a scatterplot or by using statistical software to produce a scatterplot that includes the entrire model.
+4. *Independence of observation*.
+   + The values of residuals are independent.
+   + To test for this assumption, we use the Durbin Watson statistc.
+     + This test will show values from 0 to 4, where a value of 0 to 2 shows positive autocorrelation, and values from 2 to 4 show negative autocorrelation.
+     + The mid-point, i.e., a value of 2, shows that there is no autocorrelation.
+5. *Multivariate normality*
+   + This occures when residuals are normally distributed.
+   + To test this assumption, look at how the values of residuals are distributed.
+   + Can also test this using histograms with a superimposed normal curve or the Normal Probability Plot method.
+6. \(\epsilon_{i} \tilde N(0, \sigma^{2}\)
+
+
+** Tips
++ with many potential explanatory variables to choose from, it is important to give thought to which ones to include in a model in order to avoid finding *spurious correlations* (happened just by chance).
+
+
+** Interpreting and understanding multiple linear regression output.
++ The estimated regression coefficient are under /Estimate/.
++ The fitted regression equation uses the estimated regression coefficients.
+  + *Model* describes the structure we are assuming, i.e. \(Y_{i} = \beta_{0} + \beta_{1}X_{1} + ... + \epsilon_{i}\)
+  + *Fitted equation* has coefficient estimates and can be used for prediction.
+
+*** The intercept \(\hat{\beta_{0}}\)
++ This is the mean for the response when all of the explanatory variables take on the value 0.
++ Often this is not meaning, esp when it doesnt make sense for the explanatory variables to be at 0.
++ It is advisable not to take predictions outside the range of observed values for the explanatory variables.
+
+
+*** Slope coefficients \(\hat{\beta_{i}} where i > 0\)
++ These estimate the change in the mean or expected value of the response for one unit change in that explanatory variable holding constant the value of all the other explanatory variables.
++ A negative coefficient tells us that the relationship is negative and by extension a positive coefficient tells us that the relationship is positive.
++ These are *partial coefficients*, meaning that they describe the effect on one explanatory variable holding constant the values of the other explanatory variables.
++ \(\hat{\beta_{i}} = 0\) would mean there is no relationship between the response and the i-th explanatory variable.
+
+
+*** Standard errors
++ Standard errors tell us about the precision or uncertainty of estimates, i.e. how much these estimates would vary between samples.
++ Standard errors are also used to obtain confidence intervals and to perform tests of the form \(H_{0} : \beta_{j} = 0\).
+
+
+*** t-statistic
++ This is a measure of the discrepancy between the statistic and the null hypothesis.
++ How many standard deviations away from zero is our estimate.
++ If the estimate is much further than 2 standard errors away from zero (|t| >> 2), this is some indication/ evidence that the true value is not zero or colose to zero.
++ In multiple regression, with multiple parameter estimates from the same fitted model, the t-test tests whether \(\beta_{j} = 0\) given all other terms in the model.
+  + That is, can X_{j} explain anything further, not already explain by the other variables in the model?
++ \(t = \frac{\hat{\beta_{i}}}{SE(\hat{\beta_{i}})}\)
+
+*** p-values
++ This is the answer to the question, what are the chances of obtaining a test statistc at least as extreme as the one available, (\(Pr(t > |t_{obs}|)\)) /if the null hypothesis were true?/
++ If the p-value is huge, it means there is no evidence of a relationship between that explanatory variable and the response variable, hence there wouldnt be a need to interpret it.
+
+
+*** F-test
++ The *F-statistc* on the R output is the test statistic for the following hypothesis:
+  \(H_{0} : \beta_{1} = ... = \beta_{k} = 0\)
++ The above hypothesis says that all regression coefficients in the model are equal to zero simultaneously, i.e together they do not help to explain the variation in the response.
++ The F-test is /not/ a measure of goodness-of-fit of the model:
+  + it is possible to obtain a very small /p-value/ in cases where the model explains only a tiny fraction of the total variability.
+  + This can happen esp with large sample size /n/.
++ F-test is just a check to see if the current model is better than the *null model*
+  + \(Y_{i} = \beta_{0} + \epsilon_{i}\)
++ Variation around overall mean = variation of fitted values (estimates) around overall mean + variation of observations around fitted values.
+
+
+**** Calculating the F-statistc
+ + The f-statistic is something like a signal-to-noise ratio.
+ + It compares variation in the fitted regression 'line' with residual variation.
+ + For a regression model we can split the total sum of the squared deviations (total sum of squares SS_{totals}) into parts accounted for by the model (Regression sum of squares SS_{regression}) and parts not accounted for (residual/error sum of square SSE):
+   \(SS_{total} = SS_{regression} + SSE\)
+   \(\sum^{n}_{i = 1} (Y_{i} - \bar{Y})^{2} = \sum_{i=1}^{n} (\hat{Y_{i}} - \bar{Y})^{2} + \sum_{i = 1}^{n} (Y_{i} - \hat{Y_{i}})^{2}\)
+ + The F-test compares the regression mean squares to the residual mean squares ( *mean squares = sum of square / degrees of freedom*)
+ + \(F = \frac{SS_{regression}/p}{SSE/(n-p-1)} = \frac{MS_{regression}}{MSE}\)
+ + If the null hypothesis was tru (all \(\beta_{i} = 0\)) then the F-statistic will be \approx 1.
+
+
+*** Goodness of fit: Multiple and Adjusted R^{2}
+
+**** Adjusted R^{2}
+ + This is an unbiased estimate of the proportion of variance in the response explained by the model.
+ + The adjustment takes into account the number of parameters estimated  in the model, and gives a better idea of how useful the model is in explaining the response.
+ + If we were to add lots of useless explanatory variables to a model, *multple* R^{2} would increase, whereas the adjusted R^{2} would decrease and correctly indicate that such a model is worse than the simpler model.
+ + This calculates the ratio of variance estimates directly by dividing by degrees of freedom (corresponding to each SS).
+ + This does not directly measure amount of variation explain.
+ + This gives an unbiased estimate to the population R^{2} value.
+ + Mostly used to *compare models*.
+
+
+**** R^{2}
++ This is a ratio of the regression sum of squares and the total sum of squares.
++ This is also called /coefficient of determination/.
++ When explaining this you multiply the r out-put by 100 and say /"the explanatory variables in this model explain only x% of the variation in the response./"
+
+*** Anova
+
+ | Name                           | abbr                               | formula                                                 | description                                                |
+ |--------------------------------+------------------------------------+---------------------------------------------------------+------------------------------------------------------------|
+ | Total sum of squares           | SS_{total}                         | \(\sum(Y_{i} - \bar{Y})^{2}\)                              | Difference betweeen observed and mean                      |
+ | Residual error sum of squares  | Alpha                              | \(\sum(Y_{i} -- \hat{Y_{i}})^{2}\)                          | Difference between obsereved and fitted                    |
+ | Regression sum of squares      | SS_{regression} = SS_{total} - SSE | \(\sum(\hat{Y_{i}} - \bar{Y})^{2}\)                        | Difference between fitted and mean                         |
+ | Coefficient of determination   | multiple R^{2}                     | \(\frac{SS_{regression}}{SS_{total}}\)                  | Proportion of total variability explained by the model fit |
+ | Adjusted coef of Determination | adjusted R^{2}                     | \(1 - \frac{\frac{SSE}{n-p-1}}{\frac{SS_{total}}{n-1}\) | compares explanatory power of different models             |
+
+
+*** Collinearity
+ + *Multicollinearity* is when explanatory variables are highly correlated.
+ + Correlated covariates are not always a problem.
+   + If they are, the solutions are:
+     1. Construct two separate models.
+     2. Choose which of the two correlated variables is more directly related or meaningful for modelling the response.
+ + One can check for collinearity in R using /vif/.
+
+**** Problems with multicollinearity
+1) The coefficient estimates can swing wildly based on which other independent variables are in the model.
+   + The coefficients become very sensitive to small changes in the model.
+2) Multicollinearity reduces the precision of the estimated coefficients, which weakens the statistical power of your regression model.
+   + You might not be able to trust the p-values to identify independent variables that are statistically significant.
+
+
+
+*** Checking for model misspecifications.
++ /As for simple linear regression, we need to check that our model is reasonable representation of the structure in the data, otherwise the estimates could be very misleading./
++ This is done during model development.
++ It is also done for  the final model.
++ Statistical models make certain assumptions about the structure of the relationship, and about the structure of the data.
++ If there are violations of these assumptions, it is not that data are wrong, but that the model is inappropriate!
++ We check the assumptions by looking at the behaviour of the residuals, and by looking at the relationship between the response and each fo the explanatory variables to check that there are no glaring non-linear patterns that it would be silly to fit a linear model to.
+
+**** Linear regression model assumptions
+1. The relationship is well described by a line.
+2. The error variance stays constant. (Homoscedasticity)
+   + scedasticity means variability
+   + If this assumption is violated and we have non-constant error variance the standard errors and the associated hypothesis tests for the slope coefficients will be invalid.
+   +  We can check for constant error variance by plotting residuals against fitted values.
+3. The errors (or data points) are independent.
+4. The errors are approximately normally distributed.
+
+
+*** Linearity
++ In fitting a linear regression model we are implicitly assuming that the relationship we are trying to model can be captured by a straight line.
++ /Partial residuals/ are what remains after having fitted a model with all other explanatory variables, except the current one.
+
+*** Model checking via residual plots
++ /plot(lm)/ produces residual plots.
++ If a linear regression model is appropriate, we expect to see an equal spread of the residuals throughout the range of fitted values.
++ This is used to check for violation of assumption 2 (homoscedasticity).
++ This can be done by analysing the residuals vs fitted values plot, /plot(lm)./
+  + This plot can also be used to pick up problems with the assumed relationship between response and explanatory variables, and to pick up outliers.
+
+
+*** Independence
++ Under independence we expect model residuals to be independent and consecutive errors to be unrelated.
+
+*** Normality-error assumption
++ This is checked through histograms or quantile-quantile plots of the studentized residuals.
+  + However, these are neither easily interpreted nor used as a definitive test for normality.
++ No sample is going to be perfectly normal, but if the assumption is badly violated and we have skew residuals and outliers, this may be an indication that the parts of the data are not well described by the model.
++ The /qq-plot/ plot plots standardized residuals against theoretical quantiles of the standard normal distribution (N(0,1)).
++ If the residuals are normally distributed the quantiles of the residuals (smallest, second smallest, etc) should correspnd to the quantiles of a theoretical normal distribution, and if plotted against each other should fall on the straight line.
+
+** Confidence Intervals
++ Since the regression coefficients are estimates of the effects, we also need a measure of uncertainty, and usually will give interval estimates instead of pure point estimates.
++ *Regression coefficient estimates* are /normally distributed/, so that we can use a symmetric confidence interval of the form:
+  \(\hat{\beta_{j}} \pm 2 x SE(\beta_{j})\)
++ To be perfectly correct, instead of using 2, we should use \(t_{n-k}\). where \(k\) is the total number of parameters, including the intercept term.
++ We can do this 'by hand' or by using /confint/.
+
+** Leverage
++ This is a measure of how far away the independent variable values of an observation are from those of the other observations.
++ *High-leverage* points, if any, are outliers with respect to the independent variables.
++ This makes the fitted model likely to pass close to a high leverage observation.
++ Hence, *high-leverage* points have the potential to cause large changes in the parameter estimates when they are deleted i.e., to be *influential points*.
++ Although an influential point will typically have high leverage, a high leverage point is not necessarily an influential point.
++ The leverage is typically defined as the diagonal elements of the hat matrix.
+
+** Durbin-Watson test
++ This is a test for autocorrelation in the residuals from a statistical model or regression analysis.
++ The Durbin-Watson statistic will always have a value ranging between 0 and 4. A value of 2.0 indicates there is no autocorrelation detected in the sample.
++ Values from 0 to less than 2 point to positive autocorrelation and values from 2 to 4 means negative autocorrelation.
+
+** Outliers
+ + These are data points that are far from other data points.
+ + Outliers are problematic for many statistical analyses because they can cause tests to either miss significant findings or distort real results.

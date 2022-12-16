@@ -1,0 +1,156 @@
+#+title: Extension Linear Regression Model
+#+author: Brandon Pahla
+#+options: ^:{}
+
+
+* Extensions of the Linear Regression Model.
+
+** Possible reasons for a straight line to fail to be a good model.
+ 1. Non-constant variance: as the value of Y increases, so does its variability. *Heteroscedasticity.*
+ 2. The values of Y are restricted: e.g can only lie between 0 and 1. (as for proportions)
+ 3. The relationship between Y and X may be multiplicative, not additive.
+ 4. There maybe thresholds, optimal levels of X, or the effect of X may level off.
+ 5. A non-linear relationship may occur if Y depends on the square of X.
+
+** Detection of non-linear relationships
++ First step should be a plot of response against the explanatory variables.
+
+** Approaches to non-linear relationship modeling.
+  1. Transform the response, so that the relationship becomes linear.
+  2. Transform the explanatory variable, so that the relationship becomes linear.
+  3. Add polynomial terms of the explanatory variables to capture the non-linear relationship.
+  4. Use non-linear regression to capture the non-linear relationship.
+  5. Use generalized linear models to model response variables of particular forms.
+     + This should be the first approach to be considered if the response is a count, a proportion, binary, or binomial.
+
+** 1.  Transformation of the response.
+*** Log(-> ln)
+**** What to look for
++ Y increases or decreases exponentially with changing X, and the spread (variability) of the repsonse increases with increasing Y. *Heteroscedasticity*
++ A histogram of Y is positively skewed *(a long tail to the right).*
++ It is useful for multiplicative response, which means that Y does not increase by a constant amount for a unit increase in X, but by a factor.
+
+**** Interpretation of regression coefficients.
+ + The regression coefficients estimate the change in mean response which is now log(Y), i.e. mean response on the log-scale.
+ + We use the coefficients to predict the transformed (log) scale, then transform the prediction back to the original scale.
+
+**** Confidence intervals for change in response
++ First calculate confidence intervals from the linear model for log(Y).
++ Then transform the confidence limits (exp(C-limit)) to obtain a confidence interval for the *median* response on the original scale.
++ On the log scale from linear model: \( \hat{\beta_{1}} \pm 2SE(\hat{\beta_{1}}) \)
++ Back-transformation to original scale: \(\exp(\hat{\beta_{1}} \pm 2SE(\hat{\beta_{1}}))\)
+
+*** Other common transformations
++ Square-root
+  + Often used for count data.
++ Logit transformation
+  + Used for proportional data.
+
+** 2. Polynomial Regression models.
++ Regression models with quadratic terms are sometimes called quadratic regression models.
++ A quadratic function in X can represent or model any parabolic shape.
++ By estimating the coefficients (through least squares) a parabolic curve is fitted to the data points.
++ In R, the quadratic term is added to the model as *I(X^{2})*
+
+*** Obtaining the fitted line.
++ Create a squence if x-values for which we want to predict.
++ Then use predict() for predictions, and possible confidence and prediction limits.
+  #+begin_src R :session
+sequence <- seq(min(X), max(X))
+pred <- predict(m1, new = data.frame(...), interval = "confidence")
+
+matplot(yrs, ice.pred, type = "l", ylim = c(0, 10), las = 1,
+ylab = "September Arctic Sea Ice Extent (1,000,000 sq km)",
+cex.lab = 1.3, cex.axis = 1.3, pch = 20,
+xlab = "Year", col = "blue", lty = c(1, 2, 2), lwd = 2)
+
+points(ice ~ year, pch = 20, data = dat)
+  #+end_src
+
+*** Comparing models.
++ Use the Akaike's Information Criterion (AIC) to compare models.
+  + AIC(mod1, mod2, mod3)
+  + Models with *smaller* AIC values are prefered, i.e. have stronger support from the data.
+
+*** Summary on Polynomial Regression.
++ A quadratic model is a polynomial of the 2nd order.
++ A polynomial in x is a nonlinear function of x.
+
+**** Warning
+ + It is dangerouse to extrapolate beyond the observed range of X.
+ + Because polynomial regression models can be so flexible they very much adapt to the /observed/ data, and the end-points are based on very few observations.
+ + There is no guarantee that the relationship continues as the fitted line would predict beyond the observed range.
+
+**** Where we could expect a non-linear relationship.
+
+***** Growth of bacteria colonies vs temperature.
+  + One could perhaps expect slow growth with cool temperatures, faster growth with increassing temperatures, but again little growth at very warm temperatures.
+
+***** Enzyme activity.
+***** Physical laws.
++ Intensity decreases with distance quared.
++ Energy increases with speed squared.
+
+** 3. Categorical Explanatory Variables.
+ + If the explanatory variable is not continuous, but categorical, we no longer have a simple linear regression model but we can still fit a linear model.
+ + The category that is 0, is often referred to as the baseline or reference category.
+ + The *intercept* is now /an estimate of the mean response for the baseline category./
+ + The *coefficient* of the categorical variable is /the difference between the next categorical and the baseline category./
+ + R automatically treats categorical variables as dummy variables, and also automatically chooses the first level of the categorical variable as its *reference or base level*.
+ + The estimates of the coefficients the always present:
+   + The mean of the reference (or baseline) category
+   + Difference between category 2 and reference category,
+   + Difference between category 3 and reference, etc.
+ + The dummy variables coding ensures that only one of the mean estimates or categories plays a functional role in the model at any one time.
+ + The baseline level will always appear in the model, because the mean estimates for all the other levels are relative to the estimate of the effect for the baseline level.
+
+*** Summary
++ When fitting a linear model with a continuous explanatory variable, we only estimate one parameter, the slope.
++ For categorical variables, we estimate one parameter for the baseline category, plus /a-1/ parameters for the other levels of the variable. /(where *a* is the total number of levels or categories of the variabel)/.
++ The estimate for the first level, which we call the /baseline/ level, is the *intercept coefficient*, and that the other effects estimate changes in the mean response relative to the baseline level.
+
+** 4. Interactions
++ \(X_{1}\) and \(X_{2}\) *interact* if the effect of X_{2} depends on the level of X_{1}
++ Visualise the data with /visreg/ to see what is going on.
++ If there is an interaction between X_{2} and X_{3} in the following model:
+  + \(Y_{i} = \beta_{0} + \beta_{1}X_{1i} + \beta_{2}X_{2i} + \beta_{3}X_{3i} + \epsilon_{i}  \)
+  + We add an interaction term to the model.
+    + \(Y_{i} = \beta_{0} + \beta_{1}X_{1i} + \beta_{2}X_{2i} + \beta_{3}X_{3i} + \beta_{4}X_{2i}X_{3i} + \epsilon_{i}\)
++ When interaction effects are present one can mostly not interpret the main(average) effect of one factor on its own, but one has to look at both factors simultaneously.
++ One of the useful ways to think about interactions is as /slope modifiers/.
++ If there is a strong evidence for the presense of interaction, only interpret the interaction effect, and ignore the main effects.
+
+*** Interpretation
++ A negative interaction effect means that per one unit of one variable(categorical variable) the other decreases by that much units.
++ Interactions between categorical and continuous explanatory variables are interpreted similarly:
+  + the regression line (the effect of the continuous explanatory variable) depends on the level of the categorical variable.
+
+*** R
++ \(X_{1} * X_{2}\) adds both the main effects and the interaction effect and is equivalent to \(X_{1} + X_{2} + X_{1}:X_{2}\).
+
+*** Two way interactions.
++ These are common and one should always consider whether there could be interactions between any two variables.
++ The coefficient for a two-way interaction term between two continuous explanatory variables (x1 and x2, say) gives the change in the slope between the response and x1 per unit increase in x2.
+
+*** Three way interactions.
++ These are much more difficult to understand.
++ In this case the interactioin effect changes with the level ofb the third variable.
+
+*** Gettiing rid of too many interactions.
++ One could try a transformation (e.g log) of the response variable.
++ This will work if the response depends on the explanatory variables in a multiplicative (not additive) way.
+
+*** Collinearity, Correlations and Interactions.
+**** Correlations
++ Refer to relationships between variables.
++ If ther eare strong correlations between explanatory variables this leads to *collinearity.*
+
+**** Collinearity
++ This means both variables explain the same patterns in the response.
++ The solution is often to choose only of these explanatory variables to avoid this conflict.
+
+**** Interactions
++ These are complitely different, *they have nothing to do with with correlations of explanatory variables.*
++ An interaction means that the relationship between the response and one variable changes with the levels of the other explanatory variables.
++ Sometimes this may be referred to as /non-linearities/ in the data.
++ The relationship is not always constant, but changes depending on the levels of the different variables in the model.
